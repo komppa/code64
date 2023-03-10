@@ -3,9 +3,9 @@ import * as process from 'child_process';
 
 
 const JAVA_PATH = "java";
-// TODO do not hardcode the path of the kickass.jar
-const KICKASS_PATH = "/home/<USER>/Documents/C64/KickAssembler/KickAss.jar";
-// TODO dod not hardcode the path of the VICE runtime
+// Path where KickAss.jar can be found without "/" on the end
+const KICKASS_PATH = "/<PATH_TO_KICK_ASSEMBLY_FOLDER>/KickAssembly";
+// TODO do not hardcode the path of the VICE runtime
 const C64_RUNTIME = "/snap/bin/vice-jz.x64";
 
 // TODO CRIT change 
@@ -47,7 +47,7 @@ const getRandomFilename = () => new Date().getTime().toString() + Math.random().
 const execProcess = (cmd: string) => {
 	new Promise<string>((res, rej) => {
 		// TODO out string?
-		process.exec(cmd, (err: Error, out: any) => {
+		process.exec(cmd, (err: any, out: any) => {
 			if (err) {
 				return rej(err);
 			}
@@ -70,9 +70,9 @@ export function activate(context: vscode.ExtensionContext) {
 
 			// TODO remove hardcoded paths
 			terminal.sendText(
-				`${JAVA_PATH} -jar ${KICKASS_PATH} "${getCurrentProgram()}" \
-				-odir /home/<USER>/Documents/C64/KickAssembly \
-				-o /home/<USER>/Documents/C64/KickAssembly/123.prg`
+				`${JAVA_PATH} -jar ${KICKASS_PATH}/KickAss.jar "${getCurrentProgram()}" \
+				-odir ${KICKASS_PATH} \
+				-o ${KICKASS_PATH}/out.prg`
 			);
 
 		})
@@ -84,7 +84,7 @@ export function activate(context: vscode.ExtensionContext) {
 			vscode.window.showInformationMessage('Running...');
 			const terminal = getCode64Terminal();
 			// TODO remove harcoded path
-			terminal.sendText(`${C64_RUNTIME} /home/<USER>/Documents/C64/KickAssembly/123.prg`);
+			terminal.sendText(`${C64_RUNTIME} ${KICKASS_PATH}/out.prg`);
 		})
 	);
 
@@ -95,12 +95,12 @@ export function activate(context: vscode.ExtensionContext) {
 			const terminal = getCode64Terminal();
 			// TODO remove hardcoded path
 			terminal.sendText(
-				`${JAVA_PATH} -jar ${KICKASS_PATH} "${getCurrentProgram()}" \
-				-odir /home/<USER>/Documents/C64/KickAssembly \
-				-o /home/<USER>/Documents/C64/KickAssembly/123.prg`
+				`${JAVA_PATH} -jar ${KICKASS_PATH}/KickAss.jar "${getCurrentProgram()}" \
+				-odir ${KICKASS_PATH} \
+				-o ${KICKASS_PATH}/out.prg`
 			);
 			// TODO remove hardcoded path
-			terminal.sendText(`${C64_RUNTIME} /home/<USER>/Documents/C64/KickAssembly/123.prg`);
+			terminal.sendText(`${C64_RUNTIME} ${KICKASS_PATH}/out.prg`);
 		})
 	);
 	
